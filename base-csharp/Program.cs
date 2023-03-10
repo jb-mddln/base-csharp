@@ -1,10 +1,113 @@
-﻿ShowMinAndMaxGradesStudents();
-
-// Boucle while infinie pour garder la console ouverte
+﻿// Boucle while infinie pour garder la console ouverte
 while (true)
 {
     // Déclaration d'une variable de type string?, le ? pour indiquer que la valeur peut-être 'null' et qui récupère ce que l'utilisateur tape dans la console
     string? line = Console.ReadLine();
+    NamesStartWithOrEndWith(line);
+}
+
+/* Ecrire une programme avec un tableau de noms et permettre à un utilisateur de saisir un caractère puis retourner tous les noms commençant ou se terminant par ce caractère. */
+void NamesStartWithOrEndWith(string line)
+{
+    string[] names = new string[] { "Benjamin", "Baba", "Abdoulaye", "Aurore", "Fayad", "Fidel" };
+
+    // Linq Where
+    IEnumerable<string> namesStartWithOrEndWith = names.Where(nameString => nameString.ToLower().StartsWith(line[0]) || nameString.ToLower().EndsWith(line[0]));
+    Console.WriteLine($"Voici les Noms commençant ou finissant par {line[0]} : {string.Join(", ", namesStartWithOrEndWith)}");
+
+    // foreach et une condition
+    foreach (var name in names)
+    {
+        if (name.ToLower().StartsWith(line[0]) || name.ToLower().EndsWith(line[0]))
+        {
+            Console.WriteLine($"Le Nom {name} commence ou finis par la lettre {line[0]}");
+        }
+    }
+
+    // foreach sur le where
+    foreach (var name in names.Where(nameString => nameString.ToLower().StartsWith(line[0]) || nameString.ToLower().EndsWith(line[0])))
+    {
+        Console.WriteLine($"Le Nom {name} commence ou finis par la lettre {line[0]}");
+    }
+}
+
+int? CalculFactorialLinq(string line)
+{
+    if (!int.TryParse(line, out int number))
+    {
+        Console.WriteLine($"{line} is not a valid int number ...");
+        return null;
+    }
+
+    if (number < 0)
+    {
+        Console.WriteLine("type in a positive number ...");
+        return null;
+    }
+
+    var factorial = Enumerable.Range(1, number).Aggregate(1, (factorial, index) => factorial * index);
+    if (factorial == int.MinValue)
+    {
+        Console.WriteLine($"factorial of {number} was to big for an integer ...");
+        return null;
+    }
+
+    return factorial;
+}
+
+/* Écrire une fonction qui permet de calculer la factorielle d'un nombre entier Positif avec la boucle For. */
+int? CalculFactorial(string line)
+{
+    // Condition if, si notre variable string line ne contient PAS un integer valide on sort de la fonction et retourne un résultat NULL
+    if (!int.TryParse(line, out int number))
+    {
+        Console.WriteLine($"{line} is not a valid int number ...");
+        return null;
+    }
+
+    if (number < 0)
+    {
+        Console.WriteLine("type in a positive number ...");
+        return null;
+    }
+
+    int factorial = 1;
+    for (int i = 1; i <= number; i++)
+    {
+        factorial *= i;
+    }
+
+    if (factorial == int.MinValue)
+    {
+        Console.WriteLine($"factorial of {number} was to big for an integer ...");
+        return null;
+    }
+
+    return factorial;
+}
+
+/* https://leetcode.com/problems/search-insert-position/ */
+int SearchInsert(int[] nums, int target)
+{
+    var index = nums.ToList().IndexOf(target);
+    if (index == -1)
+    {
+        
+    }
+
+    return index;
+}
+
+void ShowStudentWithMaxAverageGrade()
+{
+    Dictionary<string, double[]> notes = new Dictionary<string, double[]>();
+    notes.Add("Abdoulaye", new double[] { 6.5, 11, 13, 15.5 });
+    notes.Add("Alexandre", new double[] { 17, 12, 11, 16.5 });
+    notes.Add("Aurore", new double[] { 18.5, 7.5, 14, 9.5 });
+
+    // MaxBy, récupère la clé string et la value Array double[] de notre dictionnaire notes en prenant la moyenne la plus élevée
+    KeyValuePair<string, double[]> studentMaxAverageGrade = notes.MaxBy(x => x.Value.Average());
+    Console.WriteLine($"The student {studentMaxAverageGrade.Key} has the highest average grade : {Math.Round(studentMaxAverageGrade.Value.Average(), 2)}");
 }
 
 /* Écrire une fonction qui utilise un dictionnaire pour stocker les notes des étudiants et qui donne la note max et min de chaque étudiant. */
@@ -14,7 +117,7 @@ void ShowMinAndMaxGradesStudents()
     notes.Add("Abdoulaye", new double[] { 6.5, 11, 13, 15.5 });
     notes.Add("Alexandre", new double[] { 17, 12, 11, 16.5 });
     notes.Add("Aurore", new double[] { 18.5, 7.5, 14, 9.5 });
-
+    
     foreach (KeyValuePair<string, double[]> note in notes)
     {
         Console.WriteLine($"{note.Key} minimal grade is : {note.Value.Min()} and his max is : {note.Value.Max()}");
